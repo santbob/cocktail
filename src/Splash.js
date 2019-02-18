@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
-import {View, Text, StyleSheet, Platform} from 'react-native'
+import {View, Text, StyleSheet, Platform, StatusBar} from 'react-native'
 import {Icon} from 'react-native-elements';
 import { inject, observer } from 'mobx-react/native';
+import { goldColor } from './Constants'
 
 @inject('store') @observer
 class Splash extends Component {
@@ -14,7 +15,8 @@ class Splash extends Component {
 
   render() {
     return (<View style={styles.container}>
-      <Icon name='glass-cocktail' type='material-community' color='#279F62' size={96}/>
+      <StatusBar barStyle="light-content" />
+      <Icon name='glass-cocktail' type='material-community' color={goldColor} size={96}/>
     </View>)
   }
 }

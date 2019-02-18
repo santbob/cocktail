@@ -1,21 +1,14 @@
 
 import {observable, action, computed} from 'mobx';
-import {PORTRAIT} from './Constants'
 
 class Store {
 
-  @observable orientation = PORTRAIT;
   @observable searchTerm = '';
   @observable loading = true;
   @observable drinks = [];
   @observable searchResults = [];
   @observable drinkDetails = {};
   @observable currentDrinkIndex = 0;
-
-
-  @action changeOrientation(orientation) {
-      this.orientation = orientation;
-  }
 
   @action updateSearchTerm(searchTerm) {
       this.searchTerm = searchTerm ? searchTerm : '';

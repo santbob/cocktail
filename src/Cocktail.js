@@ -6,7 +6,9 @@ import {
   StyleSheet,
   Platform,
   ActivityIndicator,
-  Dimensions
+  Dimensions,
+  StatusBar,
+  ScrollView
 } from 'react-native'
 import {Image, Icon, Text, Tile} from 'react-native-elements'
 import {inject, observer} from 'mobx-react/native';
@@ -29,19 +31,25 @@ class Cocktail extends Component {
           store.nextDrink();
       }
   }
+  goBack() {
+    this.props.navigation.navigate('Home');
+  }
+
   render() {
     const {store} = this.props;
     const {currentDrink, currentDrinkIndex} = store;
 
     return (<View style={styles.container}>
-      {!currentDrink && (<View style={{height: height, justifyContent: 'center'}}><ActivityIndicator size="large" color="#279F62"/></View>)}
+      <StatusBar backgroundColor="#d47915" barStyle="light-content" />
+      {!currentDrink && (<View style={{height: height, justifyContent: 'center'}}><ActivityIndicator size="large" color="#b89622"/></View>)}
       {currentDrink && (<TouchableOpacity onPress={this.onPress.bind(this)}>
           <Tile
               imageSrc={{uri: currentDrink.strDrinkThumb}}
               title={currentDrink.strDrink}
               featured
               contentContainerStyle={{ height: 50 }} />
-          <View>
+          <TouchableOpacity style={styles.back} onPress={this.goBack.bind(this)}><Icon name="arrow-back" type="material" color="#fff"/></TouchableOpacity>
+          <ScrollView>
             <Text style={styles.instructions}>{currentDrink['strInstructions']}</Text>
             <Text style={styles.ingredientTitle}>Ingredients</Text>
             {maxKeys.map(keyNum => {
@@ -49,7 +57,7 @@ class Cocktail extends Component {
                     return (<Text key={keyNum} style={styles.ingredient}>{currentDrink[measurementKey + keyNum]} {currentDrink[ingredientKey + keyNum]}</Text>)
                 }
             })}
-          </View>
+          </ScrollView>
         </TouchableOpacity>)
       }
     </View>)
@@ -66,14 +74,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#333',
     height: height
   },
-  item: {
-    flexDirection: 'row',
-    backgroundColor: '#fefefe',
-    justifyContent: 'flex-start'
-  },
-  logo: {
-    width: 100,
-    height: 100
+  back: {
+    position: 'absolute',
+    top: 40,
+    left: 10,
+    width: 36,
+    height: 36,
   },
   instructions: {
     fontSize: 20,
@@ -82,7 +88,7 @@ const styles = StyleSheet.create({
     color: '#fff'
   },
   ingredientTitle: {
-    color: '#279F62',
+    color: '#b89622',
     fontSize: 24,
     marginBottom: 10,
     textAlign: 'center'

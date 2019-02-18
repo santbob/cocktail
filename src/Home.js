@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
-import {SafeAreaView, View, Text, FlatList, TouchableOpacity, StyleSheet, Platform, ActivityIndicator, Dimensions} from 'react-native'
+import {SafeAreaView, StatusBar, View, Text, FlatList, TouchableOpacity, StyleSheet, Platform, ActivityIndicator, Dimensions} from 'react-native'
 import {Image, SearchBar, Icon, Tile} from 'react-native-elements'
 import { inject, observer } from 'mobx-react/native';
+import { goldColor} from './Constants'
 const {width, height} = Dimensions.get('window')
 
 @inject('store') @observer
@@ -14,7 +15,6 @@ class Home extends Component {
   _keyExtractor = (item, index) => item.idDrink;
 
   _onPressItem = (item, index) => {
-      console.log('_onPressItem');
       this.props.store.setCurrentDrinkIndex(index);
       this.props.navigation.navigate('Cocktail');
   };
@@ -32,7 +32,8 @@ class Home extends Component {
   render() {
     const {store} = this.props;
     const {searchTerm, searchResults, drinks} = store;
-    return (<SafeAreaView style={{flex: 1, backgroundColor: '#333'}}>
+    return (<View style={{flex: 1, paddingTop: 40, backgroundColor: goldColor}}>
+      <StatusBar backgroundColor="#b89622" barStyle="light-content" />
       <View style={styles.container}>
         <SearchBar
           searchIcon={true}
@@ -50,9 +51,9 @@ class Home extends Component {
             data={searchTerm? searchResults : drinks}
           />
         )}
-        {store.loading && (<View style={styles.loading}><ActivityIndicator size="large" color="#279F62" /></View>)}
+        {store.loading && (<View style={styles.loading}><ActivityIndicator size="large" color={goldColor} /></View>)}
       </View>
-    </SafeAreaView>)
+    </View>)
   }
 }
 
@@ -63,10 +64,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'center',
-    backgroundColor: '#444'
+    backgroundColor: '#fefefe'
   },
   searchBar: {
-    width: width,
+    width: width
   },
   item: {
     flexDirection: 'row',
