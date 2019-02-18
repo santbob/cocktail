@@ -26,31 +26,27 @@ class Store {
 
   @action setCurrentDrinkIndex(index) {
       this.currentDrinkIndex = index;
-      if(this.searchTerm && searchResults.length && searchResults[currentDrinkIndex]){
-        this.currentDrinkId = searchResults[currentDrinkIndex].idDrink;
-      } else if(this.drinks.length && this.drinks[this.currentDrinkIndex]){
-        this.currentDrinkId = this.drinks[this.currentDrinkIndex].idDrink;
-        if(this.currentDrinkId && !this.drinkDetails[this.currentDrinkId]) {
-          this.fetchDrinkInfo(this.currentDrinkId)
-        }
+      console.log(this.drinks[this.currentDrinkIndex].idDrink)
+      if(!this.searchTerm && this.drinks.length && this.drinks[this.currentDrinkIndex] && this.drinks[this.currentDrinkIndex].idDrink){
+          this.fetchDrinkInfo(this.drinks[this.currentDrinkIndex].idDrink);
       }
   }
 
-  @action prevImage() {
-      this.index = this.index - 1;
-
-        if (this.index < 1) {
-            this.index = 0;
-        }
+  @action prevDrink() {
+      let index = this.currentDrinkIndex - 1;
+      if (index < 1) {
+          index = 0;
+      }
+      this.setCurrentDrinkIndex(index);
   }
 
-  @action nextImage() {
-      this.index = this.index + 1;
-
-      if (this.index > this.images.length) {
-          this.galleryPage = this.galleryPage+1;
-          this.fetchImages();
+  @action nextDrink() {
+      let index = this.currentDrinkIndex + 1;
+      const length = (this.searchTerm)? this.searchResults.length : this.drinks.length;
+      if (index >= length) {
+          index = length - 1;
       }
+      this.setCurrentDrinkIndex(index);
   }
 
   @action fetchAllDrinks() {
@@ -74,12 +70,11 @@ class Store {
         fetch(`http://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${drinkId}`)
         .then(res => res.json())
         .then(json => {
-            if(json.drinks){
-              json.drinks.forEach((drink) => {
-                   this.drinkDetails[drink.idDrink] = drink;
-              });
-            }
+            return json.drinks && json.drinks[0];
         })
+        .then(action(drink => {
+            this.drinkDetails[drink.idDrink] = drink;
+        }))
         .catch(err => console.log('ERROR', err.message))
         .finally(() => this.loading = false);
       }
@@ -90,21 +85,19 @@ class Store {
        fetch(`http://www.thecocktaildb.com/api/json/v1/1/search.php?s=${searchTerm}`)
        .then(res => res.json())
        .then(json => {
-         if(json.drinks){
-           this.searchResults = json.drinks;
-         }
-       })
+         return json.drinks;
+       }).then(action(drinks => {
+           this.searchResults = drinks ? drinks : [];
+       }))
        .catch(err => console.log('ERROR', err.message))
        .finally(() => this.loading = false);
      }
 
      @computed get currentDrink() {
-        if(this.currentDrinkId) {
-          if(this.searchTerm && this.searchResults.length){
-            return this.searchResults[this.currentDrinkId];
-          } else {
-            return this.drinkDetails[this.currentDrinkId];
-          }
+        if(this.searchTerm && this.searchResults.length){
+          return this.searchResults[this.currentDrinkIndex];
+        } else {
+          return this.drinkDetails[this.drinks[this.currentDrinkIndex].idDrink];
         }
         return null;
      }

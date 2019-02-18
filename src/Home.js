@@ -31,13 +31,14 @@ class Home extends Component {
 
   render() {
     const {store} = this.props;
-    const {searchTerm} = store;
+    const {searchTerm, searchResults, drinks} = store;
     return (<SafeAreaView style={{flex: 1, backgroundColor: '#333'}}>
       <View style={styles.container}>
         <SearchBar
           searchIcon={true}
           clearIcon={true}
-          placeholder="Type Here..."
+          lightTheme={true}
+          placeholder="Search a cocktail"
           containerStyle={styles.searchBar}
           onChangeText={this.updateSearch}
           value={searchTerm}
@@ -46,10 +47,10 @@ class Home extends Component {
           <FlatList
             keyExtractor={this._keyExtractor}
             renderItem={this._renderItem}
-            data={store.drinks}
+            data={searchTerm? searchResults : drinks}
           />
         )}
-        {store.loading && (<ActivityIndicator size="large" color="#0000ff" />)}
+        {store.loading && (<View style={styles.loading}><ActivityIndicator size="large" color="#279F62" /></View>)}
       </View>
     </SafeAreaView>)
   }
@@ -60,12 +61,12 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     backgroundColor: '#444'
   },
   searchBar: {
-    width: width
+    width: width,
   },
   item: {
     flexDirection: 'row',
@@ -77,4 +78,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center'
   },
+  loading: {
+    justifyContent: 'center',
+    height: height - 100
+  }
 })
