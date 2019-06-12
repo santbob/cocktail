@@ -95,14 +95,21 @@ def enableProguardInReleaseBuilds = false
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        applicationId "com.cocktail"
+        applicationId "com.karupulabs.cocktail"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+    }
+    signingConfigs {
+        release {
+            storeFile file(PERSONAL_PROJECT_RELEASE_STORE_FILE)
+            storePassword PERSONAL_PROJECT_RELEASE_STORE_PASSWORD
+            keyAlias PERSONAL_PROJECT_RELEASE_KEY_ALIAS
+            keyPassword PERSONAL_PROJECT_RELEASE_KEY_PASSWORD
+        }
     }
     splits {
         abi {
@@ -116,6 +123,7 @@ android {
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.release
         }
     }
     // applicationVariants are e.g. debug, release

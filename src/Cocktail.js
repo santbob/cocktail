@@ -44,7 +44,7 @@ class Cocktail extends Component {
 
     return (
       <View style={styles.container}>
-        <StatusBar backgroundColor="{themeColor}" barStyle="light-content" />
+        <StatusBar backgroundColor={themeColor} barStyle="light-content" />
         {!currentDrink && (
           <View style={{ height: height, justifyContent: "center" }}>
             <ActivityIndicator size="large" color={whiteColor} />

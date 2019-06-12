@@ -1,4 +1,4 @@
-package com.cocktail;
+package com.karupulabs.cocktail;
 
 import com.facebook.react.ReactActivity;
 

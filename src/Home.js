@@ -46,7 +46,7 @@ class Home extends Component {
     const { store } = this.props;
     const { searchTerm, searchResults, drinks } = store;
     return (
-      <View style={{ flex: 1, paddingTop: 40, backgroundColor: themeColor }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: themeColor }}>
         <StatusBar backgroundColor={themeColor} barStyle="light-content" />
         <View style={styles.container}>
           <SearchBar
@@ -71,7 +71,7 @@ class Home extends Component {
             </View>
           )}
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 }
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
-    backgroundColor: themeColor
+    backgroundColor: charcoalColor
   },
   searchBar: {
     width: width

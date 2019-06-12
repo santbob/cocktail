@@ -1,4 +1,4 @@
-package com.cocktail;
+package com.karupulabs.cocktail;
 
 import android.app.Application;
 

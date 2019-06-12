@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { Icon } from "react-native-elements";
 import { inject, observer } from "mobx-react/native";
-import { goldColor } from "./Constants";
+import { themeColor, charcoalColor, whiteColor } from "./Constants";
 
 @inject("store")
 @observer
@@ -27,7 +27,7 @@ class Splash extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <StatusBar barStyle="light-content" />
+        <StatusBar backgroundColor={charcoalColor} barStyle="light-content" />
         <Image source={require("./cocktail.png")} style={styles.logo} />
       </View>
     );
@@ -41,14 +41,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#333"
+    backgroundColor: charcoalColor
   },
   logo: {
     width: 100,
     height: 300
   },
   title: {
-    color: "#fff",
+    color: whiteColor,
     fontSize: 44,
     textAlign: "center"
   }
