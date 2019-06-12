@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { Image, Icon, Text, Tile } from "react-native-elements";
 import { inject, observer } from "mobx-react/native";
-import { themeColor, whiteColor, charcoalColor } from "./Constants";
+import { themeColor, whiteColor, charcoalColor, dimWhite } from "./Constants";
 
 const { width, height } = Dimensions.get("window");
 
@@ -47,7 +47,7 @@ class Cocktail extends Component {
         <StatusBar backgroundColor="{themeColor}" barStyle="light-content" />
         {!currentDrink && (
           <View style={{ height: height, justifyContent: "center" }}>
-            <ActivityIndicator size="large" color={themeColor} />
+            <ActivityIndicator size="large" color={whiteColor} />
           </View>
         )}
         {currentDrink && (
@@ -124,6 +124,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 5,
     textAlign: "center",
-    color: whiteColor
+    color: dimWhite
   }
 });
