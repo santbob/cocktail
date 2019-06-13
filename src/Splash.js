@@ -29,6 +29,7 @@ class Splash extends Component {
       <View style={styles.container}>
         <StatusBar backgroundColor={charcoalColor} barStyle="light-content" />
         <Image source={require("./cocktail.png")} style={styles.logo} />
+        <Text style={styles.title}>Cocktails</Text>
       </View>
     );
   }
@@ -45,11 +46,11 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: 100,
-    height: 300
+    height: 250
   },
   title: {
-    color: whiteColor,
-    fontSize: 44,
+    color: themeColor,
+    fontSize: 36,
     textAlign: "center"
   }
 });
