@@ -8,9 +8,13 @@ import {
   ActivityIndicator,
   Dimensions,
   StatusBar,
-  ScrollView
+  ScrollView,
+  BackHandler
 } from "react-native";
 import { Image, Icon, Text, Tile } from "react-native-elements";
+import GestureRecognizer, {
+  swipeDirections
+} from "react-native-swipe-gestures";
 import { inject, observer } from "mobx-react/native";
 import { themeColor, whiteColor, charcoalColor, dimWhite } from "./Constants";
 
@@ -23,17 +27,30 @@ const measurementKey = "strMeasure";
 @inject("store")
 @observer
 class Cocktail extends Component {
-  onPress(event) {
-    console.log("onPress");
-    const { store } = this.props,
-      X = event.nativeEvent.locationX;
-
-    if (X < width * 0.3) {
-      store.prevDrink();
-    } else if (X > width * 0.6) {
-      store.nextDrink();
+  onSwipe(gestureName, gestureState) {
+    const { store } = this.props;
+    const { SWIPE_LEFT, SWIPE_RIGHT } = swipeDirections;
+    switch (gestureName) {
+      case SWIPE_LEFT:
+        store.nextDrink();
+        break;
+      case SWIPE_RIGHT:
+        store.prevDrink();
+        break;
     }
   }
+
+  componentDidMount() {
+    this.backHandler = BackHandler.addEventListener("hardwareBackPress", () => {
+      this.goBack(); // works best when the goBack is async
+      return true;
+    });
+  }
+
+  componentWillUnmount() {
+    this.backHandler.remove();
+  }
+
   goBack() {
     this.props.navigation.navigate("Home");
   }
@@ -51,39 +68,47 @@ class Cocktail extends Component {
           </View>
         )}
         {currentDrink && (
-          <TouchableOpacity onPress={this.onPress.bind(this)}>
-            <Tile
-              imageSrc={{ uri: currentDrink.strDrinkThumb }}
-              title={currentDrink.strDrink}
-              featured
-              contentContainerStyle={{ height: 50 }}
-            />
-            <TouchableOpacity
-              style={styles.back}
-              onPress={this.goBack.bind(this)}
-            >
-              <Icon name="arrow-back" type="material" color={whiteColor} />
-            </TouchableOpacity>
-            <ScrollView>
-              <Text style={styles.instructions}>
-                {currentDrink["strInstructions"]}
-              </Text>
-              <Text style={styles.ingredientTitle}>Ingredients</Text>
-              {maxKeys.map(keyNum => {
-                if (
-                  currentDrink[ingredientKey + keyNum] &&
-                  currentDrink[measurementKey + keyNum]
-                ) {
-                  return (
-                    <Text key={keyNum} style={styles.ingredient}>
-                      {currentDrink[measurementKey + keyNum]}{" "}
-                      {currentDrink[ingredientKey + keyNum]}
-                    </Text>
-                  );
-                }
-              })}
-            </ScrollView>
-          </TouchableOpacity>
+          <GestureRecognizer
+            onSwipe={(direction, state) => this.onSwipe(direction, state)}
+            config={{
+              velocityThreshold: 0.3,
+              directionalOffsetThreshold: 80
+            }}
+          >
+            <View>
+              <Tile
+                imageSrc={{ uri: currentDrink.strDrinkThumb }}
+                title={currentDrink.strDrink}
+                featured
+                contentContainerStyle={{ height: 50 }}
+              />
+              <TouchableOpacity
+                style={styles.back}
+                onPress={this.goBack.bind(this)}
+              >
+                <Icon name="arrow-back" type="material" color={whiteColor} />
+              </TouchableOpacity>
+              <ScrollView>
+                <Text style={styles.instructions}>
+                  {currentDrink["strInstructions"]}
+                </Text>
+                <Text style={styles.ingredientTitle}>Ingredients</Text>
+                {maxKeys.map(keyNum => {
+                  if (
+                    currentDrink[ingredientKey + keyNum] &&
+                    currentDrink[measurementKey + keyNum]
+                  ) {
+                    return (
+                      <Text key={keyNum} style={styles.ingredient}>
+                        {currentDrink[measurementKey + keyNum]}{" "}
+                        {currentDrink[ingredientKey + keyNum]}
+                      </Text>
+                    );
+                  }
+                })}
+              </ScrollView>
+            </View>
+          </GestureRecognizer>
         )}
       </View>
     );
